@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منيو السلطان - نظام المربعات</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl;
+            background: url("img/a7med.jpg") no-repeat center center fixed;
+            background-size: cover;
+            color: #ffd700;
+            overflow-x: hidden;
+        }
+
+        .overlay {
+            background: rgba(0, 0, 0, 0.9);
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-shadow: 0px 0px 10px rgba(255, 215, 0, 0.5);
+        }
+
+        /* حاوية المربعات (الأقسام) */
+        .tabs-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        .tab-box {
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid #ffd700;
+            border-radius: 12px;
+            padding: 15px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-box i {
+            font-size: 24px;
+        }
+
+        .tab-box:hover, .tab-box.active {
+            background: #ffd700;
+            color: #000;
+        }
+
+        /* حاوية عرض الأصناف */
+        .content-container {
+            max-width: 600px;
+            margin: auto;
+            min-height: 200px;
+        }
+
+        .category-content {
+            display: none; /* مخفي افتراضياً */
+            animation: fadeIn 0.5s ease;
+        }
+
+        .category-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border-right: 4px solid #ffd700;
+            font-size: 20px;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #fff;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 5px 12px;
+            border-radius: 8px;
+        }
+        
+/* 1. تعديل حاوية اللوجو لتقريب المسافة من الأسفل */
+.logo-container {
+    text-align: center;
+    margin-top: 10px;    /* المسافة من الأعلى */
+    margin-bottom: 5px;  /* قللنا المسافة جداً هنا لتقريب المربعات */
+}
+
+/* 2. تعديل حاوية المربعات لضمان عدم وجود مسافات علوية كبيرة */
+.tabs-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    max-width: 800px;
+    margin: 0 auto 30px; /* الـ 0 الأول يضمن عدم وجود مسافة فوق المربعات */
+}
+
+/* 3. تقليل حجم اللوجو قليلاً (اختياري) ليظهر التصميم متناسق */
+.logo-container img {
+    max-width: 300px; /* الـ 500 كانت كبيرة جداً وقد تسبب مساحات فارغة وهمية */
+    height: auto;
+    filter: drop-shadow(0px 0px 15px rgba(255, 215, 0, 0.6));
+}
+        /* أزرار التحكم العلوية */
+        .top-btns {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .back-btn {
+            padding: 8px 15px;
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            background: transparent;
+            color: #ffd700;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            font-size: 16px;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="overlay">
+    <div class="top-btns">
+        <button onclick="goLogin()" class="back-btn">🔐 دخول</button>
+        <button onclick="goLogin2()" class="back-btn">⌛ الاستهلاك</button>
+    </div>
+
+  <div class="logo-container">
+    <!-- تأكد أن الصورة موجودة داخل مجلد img واسمها logo.png -->
+    <img src="img/layon.png" alt="لوجو السلطان">
+</div>
+    <!-- مربعات الأقسام -->
+    <div class="tabs-container">
+        <div class="tab-box active" onclick="openCategory(event, 'syrian')">
+            <span>🌯</span>
+            <span>سندوتشات</span>
+        </div>
+        <div class="tab-box" onclick="openCategory(event, 'french')">
+            <span>🌮</span>
+            <span>كريب</span>
+        </div>
+        <div class="tab-box" onclick="openCategory(event, 'crepe')">
+            <span>🥞</span>
+            <span>الحلو</span>
+        </div>
+        <div class="tab-box" onclick="openCategory(event, 'hot')">
+            <span>☕</span>
+            <span>ساخن</span>
+        </div>
+        <div class="tab-box" onclick="openCategory(event, 'cold')">
+            <span>🍹</span>
+            <span>بارد</span>
+        </div>
+    </div>
+
+    <!-- محتوى المنيو -->
+    <div class="content-container">
+        
+        <!-- قسم السوري -->
+        <div id="syrian" class="category-content active">
+            <div class="item"><span>سورى / فرنساوى</span> <span class="price"></span></div>
+            <div class="item"><span>بطاطس</span> <span class="price">30ج</span></div>
+            <div class="item"><span>بانيه كرسبى</span> <span class="price">50ج</span></div>
+            <div class="item"><span>هوت دوج</span> <span class="price">50ج</span></div>
+            <div class="item"><span>ميكسيكانو</span> <span class="price">60ج</span></div>
+            <div class="item"><span>استربس</span> <span class="price">75ج</span></div>
+            <div class="item"><span>بانيه فريش</span> <span class="price">75ج</span></div>
+	    <div class="item"><span>شيش طووق</span> <span class="price">75ج</span></div>
+            <div class="item"><span>برجر</span> <span class="price">75ج</span></div>
+	    <div class="item"><span>حواوشى</span> <span class="price">40ج</span></div>
+            <div class="item"><span>الاضفات</span> <span class="price"></span></div>
+            <div class="item"><span>جبنة متزاريلا</span> <span class="price">10ج</span></div>
+        </div>
+
+        <!-- قسم اكريب -->
+        <div id="french" class="category-content">
+            <div class="item"><span>كريب بطاطس</span> <span class="price">50ج</span></div>
+            <div class="item"><span>كريب بانيه كرسبى</span> <span class="price">60ج</span></div>
+            <div class="item"><span>كريب استربس</span> <span class="price">90ج</span></div>
+            <div class="item"><span>كريب سوبر كرانشى</span> <span class="price">100ج</span></div>
+            <div class="item"><span>كريب كوردين بلو</span> <span class="price">110ج</span></div>
+            <div class="item"><span>كريب شيش طاووق</span> <span class="price">90ج</span></div>
+            <div class="item"><span>كريب ميكسيكانو</span> <span class="price">75ج</span></div>
+            <div class="item"><span>كريب مكس فراخ</span> <span class="price">130ج</span></div>
+            <div class="item"><span>كريب هوت دوج</span> <span class="price">60ج</span></div>
+            <div class="item"><span>الاضافات</span> <span class="price"></span></div>
+            <div class="item"><span>  جبنة متزاريلا كونو</span> <span class="price">40ج</span></div>
+        </div>
+
+        <!-- قسم الحلو -->
+        <div id="crepe" class="category-content">
+            <div class="item"><span>وفل نوتيلا</span> <span class="price">50ج</span></div>
+            <div class="item"><span>وافل The Best</span> <span class="price">75ج</span></div>
+            <div class="item"><span>كريب نوتيلا</span> <span class="price">50ج</span></div>
+            <div class="item"><span>كريب شوكلاته The Best</span> <span class="price">75ج</span></div>
+            <div class="item"><span>كوباية ايس كريم</span> <span class="price">20 / 40 ج</span></div>
+            <div class="item"><span>مولتين كيك</span> <span class="price">100ج</span></div>
+            <div class="item"><span>الاضفات</span> <span class="price"></span></div>
+            <div class="item"><span>فواكه</span> <span class="price">10ج</span></div>
+            <div class="item"><span>بولة ايس كريم</span> <span class="price">10ج</span></div>
+            <div class="item"><span>اوريو</span> <span class="price">10ج</span></div>
+            <div class="item"><span>توينكز</span> <span class="price">10ج</span></div>
+            <div class="item"><span>هوهز</span> <span class="price">10ج</span></div>
+            <div class="item"><span>لوتس</span> <span class="price">10ج</span></div>
+        </div>
+
+        <!-- قسم الساخن -->
+        <div id="hot" class="category-content">
+            <div class="item"><span>شاى</span> <span class="price">15ج</span></div>
+            <div class="item"><span>براد شاى</span> <span class="price">40ج</span></div>
+            <div class="item"><span>قهوة تركى</span> <span class="price">25ج</span></div>
+            <div class="item"><span> قهوة سبرسو سنجل</span> <span class="price">30ج</span></div>
+            <div class="item"><span>قهوة سبرسو دبل شوت</span> <span class="price">45ج</span></div>
+            <div class="item"><span>كابتشينو</span> <span class="price">75ج</span></div>
+            <div class="item"><span>لاتيه</span> <span class="price">65ج</span></div>
+            <div class="item"><span>ينسون</span> <span class="price">15ج</span></div>
+            <div class="item"><span>سبانش لاتيه</span> <span class="price">75ج</span></div>
+            <div class="item"><span> قهوة فرنساوى</span> <span class="price">40ج</span></div>
+            <div class="item"><span>سحلب بلبن مكسرات</span> <span class="price">50ج</span></div>
+            <div class="item"><span>سحلب بلبن فواكه</span> <span class="price">50ج</span></div>
+            <div class="item"><span>كوفى مكس</span> <span class="price">30ج</span></div>
+            <div class="item"><span>هوت شوكليت</span> <span class="price">75ج</span></div>
+            <div class="item"><span>هوت سيدر</span> <span class="price">40ج</span></div>
+            <div class="item"><span>فرابتشينو كراميل</span> <span class="price">75ج</span></div>
+        </div>
+
+        <!-- قسم البارد -->
+        <div id="cold" class="category-content">
+            <div class="item"><span>مياه معدنيه</span> <span class="price">10ج</span></div>
+            <div class="item"><span>كنز بيبسي</span> <span class="price">30ج</span></div>
+            <div class="item"><span>كنز بيبسي دايت</span> <span class="price">30ج</span></div>
+            <div class="item"><span>كنز سفن أب</span> <span class="price">30ج</span></div>
+            <div class="item"><span>كنز ميرندا برتقال</span> <span class="price">30ج</span></div>
+            <div class="item"><span>كنز ميرندا تفاح</span> <span class="price">30ج</span></div>
+            <div class="item"><span>كنز كوكاكولا</span> <span class="price">30ج</span></div>
+            <div class="item"><span>كنز تويست</span> <span class="price">30ج</span></div>
+            <div class="item"><span>كنز سبرايت</span> <span class="price">30ج</span></div>
+            <div class="item"><span>كنز شويبس ليمون</span> <span class="price">30ج</span></div>
+            <div class="item"><span>كنز شويبس رمان</span> <span class="price">30ج</span></div>
+            <div class="item"><span>سيموزى اناناس</span> <span class="price">40ج</span></div>
+            <div class="item"><span>سيموزى بلوبرى</span> <span class="price">40ج</span></div>
+            <div class="item"><span>سيموزى ميكس توت</span> <span class="price">40ج</span></div>
+            <div class="item"><span>سيموزى مانجا</span> <span class="price">50ج</span></div>
+            <div class="item"><span>سيموزى توت احمر</span> <span class="price">40ج</span></div>
+            <div class="item"><span>سيموزى فراولة</span> <span class="price">40ج</span></div>
+            <div class="item"><span>سيموزى كيوى</span> <span class="price">40ج</span></div>
+            <div class="item"><span>سيموزى بطيخ</span> <span class="price">40ج</span></div>
+            <div class="item"><span>سيموزى رومان</span> <span class="price">40ج</span></div>
+            <div class="item"><span>سيموزى اوريو</span> <span class="price">40ج</span></div>
+            <div class="item"><span>عصير اناناس</span> <span class="price">40ج</span></div>
+            <div class="item"><span>عصير بلوبرى</span> <span class="price">40ج</span></div>
+            <div class="item"><span>عصير ميكس توت</span> <span class="price">40ج</span></div>
+            <div class="item"><span>عصير مانجا</span> <span class="price">50ج</span></div>
+            <div class="item"><span>عصير توت احمر</span> <span class="price">40ج</span></div>
+            <div class="item"><span>عصير فراولة</span> <span class="price">40ج</span></div>
+            <div class="item"><span>عصير كيوى</span> <span class="price">40ج</span></div>
+            <div class="item"><span>عصير بطيخ</span> <span class="price">40ج</span></div>
+            <div class="item"><span>عصير رومان</span> <span class="price">40ج</span></div>
+            <div class="item"><span>عصير اوريو</span> <span class="price">40ج</span></div>
+            <div class="item"><span>ميلك شيك اناناس</span> <span class="price">50ج</span></div>
+            <div class="item"><span>ميلك شيك بلوبرى</span> <span class="price">50ج</span></div>
+            <div class="item"><span>ميلك شيك ميكس توت</span> <span class="price">50ج</span></div>
+            <div class="item"><span>ميلك شيك مانجا</span> <span class="price">60ج</span></div>
+            <div class="item"><span>ميلك شيك توت احمر</span> <span class="price">50ج</span></div>
+            <div class="item"><span>ميلك شيك فراولة</span> <span class="price">50ج</span></div>
+            <div class="item"><span>ميلك شيك كيوى</span> <span class="price">50ج</span></div>
+            <div class="item"><span>ميلك شيك بطيخ</span> <span class="price">50ج</span></div>
+            <div class="item"><span>ميلك شيك رومان</span> <span class="price">50ج</span></div>
+            <div class="item"><span>ميلك شيك اوريو</span> <span class="price">50ج</span></div>
+            <div class="item"><span>ايس سبانش لاتيه</span> <span class="price">75ج</span></div>
+            <div class="item"><span>زبادو</span> <span class="price">60ج</span></div>
+            <div class="item"><span>ليمون نعناع</span> <span class="price">50ج</span></div>
+            <div class="item"><span>موخيتو</span> <span class="price">40ج</span></div>
+            <div class="item"><span>افوكاتو</span> <span class="price">115ج</span></div>
+            <div class="item"><span>ايس كوفى</span> <span class="price">75ج</span></div>
+            <div class="item"><span>الاضفات</span> <span class="price"></span></div>
+            <div class="item"><span>فواكه</span> <span class="price">10ج</span></div>
+            <div class="item"><span>بولة ايس كريم</span> <span class="price">10ج</span></div>
+            <div class="item"><span>اوريو</span> <span class="price">10ج</span></div>
+            <div class="item"><span>توينكز</span> <span class="price">10ج</span></div>
+            <div class="item"><span>هوهز</span> <span class="price">10ج</span></div>
+            <div class="item"><span>لوتس</span> <span class="price">10ج</span></div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        © 2020 تم الانشاء والتطوير بواسطة <b>A7med Ashraf</b> <br>
+         01019728653 📞
+    </div>
+</div>
+
+<script>
+    function openCategory(evt, categoryName) {
+        // إخفاء كل المحتويات
+        const contents = document.querySelectorAll(".category-content");
+        contents.forEach(content => content.classList.remove("active"));
+
+        // إزالة حالة النشاط (Active) من كل المربعات
+        const tabs = document.querySelectorAll(".tab-box");
+        tabs.forEach(tab => tab.classList.remove("active"));
+
+        // إظهار القسم المطلوب وإضافة حالة النشاط للمربع المضغوط
+        document.getElementById(categoryName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+
+    function goLogin(){ window.location.href = "login.html"; }
+    function goLogin2(){ window.location.href = "status.html"; }
+</script>
+
+</body>
+</html>
